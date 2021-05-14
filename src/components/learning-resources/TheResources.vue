@@ -11,7 +11,9 @@
       >Añadir recurso</base-button
     >
   </base-card>
-  <component :is="selectedTab"></component>
+  <keep-alive>
+    <component :is="selectedTab"></component>
+  </keep-alive>
 </template>
 
 <script>
@@ -29,14 +31,14 @@ export default {
       storedResources: [
         {
           id: 'official-guide',
-          title: 'Official Guide',
-          description: 'The official Vue.js documentation',
+          title: 'Guía oficial',
+          description: 'La documentación oficial de Vue.js',
           link: 'https://vuejs.org',
         },
         {
           id: 'google',
           title: 'Google',
-          description: 'Learn to google...',
+          description: 'Aprende a buscar en Google...',
           link: 'https://google.com',
         },
       ],
@@ -45,6 +47,7 @@ export default {
   provide() {
     return {
       resources: this.storedResources,
+      addResource: this.addResource,
     };
   },
   computed: {
@@ -58,6 +61,16 @@ export default {
   methods: {
     setSelectedTab(tab) {
       this.selectedTab = tab;
+    },
+    addResource(titulo, descripcion, url) {
+      const newResource = {
+        id: new Date().toISOString(),
+        title: titulo,
+        description: descripcion,
+        link: url,
+      };
+      this.storedResources.unshift(newResource);
+      this.selectedTab = 'stored-resources';
     },
   },
 };
